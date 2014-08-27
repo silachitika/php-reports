@@ -124,3 +124,139 @@ Stripe::setApiKey("123456");
 Hopefully, you can begin to see the power of Php Reports.
 
 For full documentation and information on getting started, check out http://jdorn.github.io/php-reports/
+
+
+
+
+Manual
+
+Installation Procedure:
+=======================
+
+1. Git Clone https://github.com/silachitika/php-reports.git
+
+```
+git clone https://github.com/silachitika/php-reports.git
+```
+
+
+2. The next step is to install dependencies with Composer. If you don't already have composer installed, run the following:
+```
+curl -sS https://getcomposer.org/installer | php
+sudo mv composer.phar /usr/local/bin/composer
+```
+
+
+3. Once Composer is installed, run the following from within the php-reports folder
+```
+composer install​
+```
+
+4. Finally, you need to create a configuration file. A sample one is included in config/config.php.sample. It's easiest to just use this as a base.
+```
+cp config/config.php.sample config/config.php
+```
+5. You should now be able to view the report list in your browser
+
+If you use nginx, place the following in your server declaration - try_files $uri $uri/ /index.php?$query_string;
+
+If you use Apache, make sure .htaccess files are allowed and mod_rewrite is enabled
+The basic Apache configuration (Optional)
+```
+ sudo vi /etc/apache2/sites-available/default                
+ ```
+ 
+ ```
+ <Directory /var/www/php-reports>
+                Options Indexes FollowSymLinks MultiViews
+                AllowOverride All
+                Order allow,deny
+                allow from all
+        </Directory>
+```
+New Features and Usage:
+======================
+
+A. User Authentication:
+======================
+
+1. Enable the login system in config/config.php
+
+```
+vi config/config.php//Confugure whether to use Login System or not for PHPReports
+//Assign 1 to enable, assign 0 for disable.Default it is Disable
+'loginEnable' => 1,
+```
+
+2. Create the mysql database called php_reports and run the php_reports.sql file for the login database table structure and default data.
+
+```
+Default Login Details:                                              User Name: admin@example.com                                     Password: password* Change the email and password once logged in as admin.
+```
+
+3. Also you can update the login_configuration table for your custom website_url and to enable registration feature for users and enable email login etc.
+```
+SELECT * FROM `login_configuration` 
+```
+id	name 	value
+1 	website_name	PHP Reports Login
+2	website_url	localhost/php-reports/login/
+3	email	admin@example.com
+4	activation	1
+5	resend_activation_threshold 	0
+6	language	models/languages/en.php
+7	template	models/site-templates/default.css
+8	can_register 	0
+9	new_user_title	Admin
+11	email_login	1
+12	token_timeout 	10800
+
+
+B) Uploading Custom Reports and Edit Reports:
+============================================
+
+
+1. Add the link to the reports folder in the config.php
+```
+//the root directory of all your reports
+//reports can be organized in subdirectories
+'reportDir' => 'reports',
+```
+
+NOTE: For Security reasons, suggested by Anugrah better to keep the reports directory outside of the repo (Also To avoid the permission issues) and link to that location in config.php.
+```
+'reportDir' => '/home/sreekanth/reports',
+```
+
+2. Make sure the permissions to the reports folder is writable from other users.
+
+
+3. With in each reports sub directories create the custom directory for uploading custom user reports.
+
+
+4. You can see the edit report option after selecting any report from report list right side of the report name.
+
+
+5. You can see the Add custom report in the report list only if you create the custom directory within the report directories.
+
+
+C) Email Scheduler 
+==================
+
+1. You can see the email scheduler after you select any report, and you can scheduler email after you run the report.
+
+2. You can select the time to fire the email, and it creates the cron job under the www-data user.
+
+
+D) Bug Fixes and Other Extensions
+=================================
+
+1)Date Range Issue Fix.(https://github.com/jdorn/php-reports/issues/139)
+
+2)Fixed the email send error due to it is taking high memory while executing program to create the email.
+3)Fixed the ado oci8 variables issue https://github.com/jdorn/php-reports/issues/128
+
+4)Pipeline Charts.(https://github.com/jdorn/php-reports/issues/137)
+
+
+
